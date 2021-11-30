@@ -164,6 +164,7 @@ curseforge {
 			requiredDependency 'fabric-api'
 			requiredDependency 'puzzles-lib-fabric'
 			requiredDependency 'forge-config-api-port-fabric'
+			optionalDependency 'enchantment-descriptions'
 		}
 	}
 	options {
