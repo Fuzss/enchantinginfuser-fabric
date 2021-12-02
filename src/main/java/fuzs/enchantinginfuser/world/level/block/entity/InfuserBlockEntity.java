@@ -1,7 +1,6 @@
 package fuzs.enchantinginfuser.world.level.block.entity;
 
 import fuzs.enchantinginfuser.registry.ModRegistry;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -22,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("NullableProblems")
-public class InfuserBlockEntity extends EnchantmentTableBlockEntity implements WorldlyContainer, BlockEntityClientSerializable {
+public class InfuserBlockEntity extends EnchantmentTableBlockEntity implements WorldlyContainer {
     private final NonNullList<ItemStack> inventory = NonNullList.withSize(1, ItemStack.EMPTY);
     private LockCode code = LockCode.NO_LOCK;
 
@@ -39,39 +38,27 @@ public class InfuserBlockEntity extends EnchantmentTableBlockEntity implements W
     @Override
     public void load(CompoundTag nbt) {
         super.load(nbt);
+        this.code = LockCode.fromTag(nbt);
         this.inventory.clear();
         ContainerHelper.loadAllItems(nbt, this.inventory);
-        this.code = LockCode.fromTag(nbt);
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        this.saveMetadataAndItems(compound);
-        this.code.addToTag(compound);
-        return compound;
-    }
-
-    private CompoundTag saveMetadataAndItems(CompoundTag compound) {
-        super.save(compound);
-        ContainerHelper.saveAllItems(compound, this.inventory, true);
-        return compound;
+    protected void saveAdditional(CompoundTag compoundTag) {
+        super.saveAdditional(compoundTag);
+        this.code.addToTag(compoundTag);
+        ContainerHelper.saveAllItems(compoundTag, this.inventory, true);
     }
 
     @Override
     @Nullable
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, -1, this.getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
-        return this.saveMetadataAndItems(tag);
-    }
-
-    @Override
-    public void fromClientTag(CompoundTag tag) {
-        this.inventory.clear();
-        ContainerHelper.loadAllItems(tag, this.inventory);
+    public CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
     }
 
     @Override
