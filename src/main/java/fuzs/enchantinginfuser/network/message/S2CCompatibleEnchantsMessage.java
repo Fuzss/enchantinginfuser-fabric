@@ -28,7 +28,7 @@ public class S2CCompatibleEnchantsMessage implements Message {
     @Override
     public void write(FriendlyByteBuf buf) {
         buf.writeByte(this.containerId);
-        buf.writeByte(this.enchantments.size());
+        buf.writeInt(this.enchantments.size());
         for (Enchantment enchantment : this.enchantments) {
             buf.writeInt(Registry.ENCHANTMENT.getId(enchantment));
         }
@@ -37,7 +37,7 @@ public class S2CCompatibleEnchantsMessage implements Message {
     @Override
     public void read(FriendlyByteBuf buf) {
         this.containerId = buf.readByte();
-        final int size = buf.readByte();
+        final int size = buf.readInt();
         List<Enchantment> enchantments = Lists.newArrayListWithCapacity(size);
         for (int i = 0; i < size; i++) {
             enchantments.add(Registry.ENCHANTMENT.byId(buf.readInt()));

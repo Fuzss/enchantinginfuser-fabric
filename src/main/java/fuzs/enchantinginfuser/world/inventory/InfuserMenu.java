@@ -459,9 +459,14 @@ public class InfuserMenu extends AbstractContainerMenu implements ContainerListe
         boolean isBook = stack.getItem() instanceof BookItem;
         for (Enchantment enchantment : Registry.ENCHANTMENT) {
             if (enchantment.canEnchant(stack) || isBook) {
-                if ((!enchantment.isTreasureOnly() || allowTreasure || (enchantment.isCurse() && allowCurse)) && (enchantment.isDiscoverable() || allowUndiscoverable)) {
-                    list.add(enchantment);
+                if (!enchantment.isDiscoverable()) {
+                    if (!allowUndiscoverable) continue;
+                } else if (enchantment.isCurse()) {
+                    if (!allowCurse) continue;
+                } else if (enchantment.isTreasureOnly()) {
+                    if (!allowTreasure) continue;
                 }
+                list.add(enchantment);
             }
         }
         return list;
