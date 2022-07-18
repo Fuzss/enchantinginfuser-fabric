@@ -35,6 +35,8 @@ import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -188,7 +190,7 @@ public class InfuserMenu extends AbstractContainerMenu implements ContainerListe
     }
 
     private float getBlockPower(Level world, BlockPos pos) {
-        return world.getBlockState(pos).is(Blocks.BOOKSHELF) ? 1.0F : 0.0F;
+        return world.getBlockState(pos).is(ConventionalBlockTags.BOOKSHELVES) ? 1.0F : 0.0F;
     }
 
     public int clickEnchantmentButton(Enchantment enchantment, boolean increase) {
